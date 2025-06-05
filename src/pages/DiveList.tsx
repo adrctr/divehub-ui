@@ -1,29 +1,13 @@
-import { useEffect, useState } from 'react';
 import { Table, Title, Loader, Center, Text } from '@mantine/core';
+import { useDiveApi } from '../hooks/useDiveApi';
+import { StatsDives } from '../components/StatsDives';
 
-export interface Dive {
-  id: number;
-  date: Date;
-  location: string;
-  depth: number;
-}
-
+/**
+ * Composant pour afficher la liste des plongées.
+ * Récupère les données depuis l'API et les affiche dans un tableau.
+ */
 export default function DiveList() {
-  const [dives, setDives] = useState<Dive[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('https://localhost:7186/api/Dive/All') // <-- adapte si tu utilises HTTP
-      .then((res) => {
-        if (!res.ok) throw new Error('Erreur serveur');
-        return res.json();
-      })
-      .then(setDives)
-      .catch((err) => {
-        console.error('Erreur lors du chargement des plongées :', err);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+  const { dives, loading, error } = useDiveApi();
 
   if (loading) {
     return (
@@ -33,25 +17,35 @@ export default function DiveList() {
     );
   }
 
-  if (dives.length === 0) {
+  if (error) {
+    return <Text >Erreur lors du chargement des plongées : {error}</Text>;
+  }
+
+  if (!dives || dives.length === 0) {
     return <Text>Aucune plongée enregistrée pour le moment.</Text>;
   }
 
   return (
     <>
+    <StatsDives />
       <Title order={2} mb="md">Liste des plongées</Title>
       <Table striped highlightOnHover withTableBorder>
         <thead>
           <tr>
+            <th>Nom de la plongée</th>
             <th>Date</th>
+            <th>Description</th>
+            <th>Localisation</th>
             <th>Lieu</th>
             <th>Profondeur (m)</th>
           </tr>
         </thead>
         <tbody>
           {dives.map((dive) => (
-            <tr key={dive.id}>
-              <td>{new Date(dive.date).toLocaleDateString()}</td>
+            <tr key={dive.diveId}>
+              <td>{dive.diveName}</td>
+              <td>{new Date(dive.diveDate).toLocaleDateString()}</td>
+              <td>{dive.description}</td>
               <td>{dive.location}</td>
               <td>{dive.depth}</td>
             </tr>
