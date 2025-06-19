@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import type { Dive } from '../types/Dive';
+import type { Dive, DiveDto } from '../types/Dive';
 import { addDive, deleteDive, getDives } from '../services/diveApi';
 
 export function useDiveApi() {
@@ -19,7 +19,7 @@ export function useDiveApi() {
     }
   };
 
-  const addNewDive = async (dive: Dive) => {
+  const addNewDive = async (dive: DiveDto) => {
     const newDive = await addDive(dive);
     setDives((prev) => [...prev, newDive]);
   };

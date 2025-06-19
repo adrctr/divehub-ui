@@ -3,7 +3,6 @@ import {
   AppShell,
   Group,
   Burger,
-  Skeleton,
   Stack,
   NavLink,
 } from "@mantine/core";

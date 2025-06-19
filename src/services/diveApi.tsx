@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { Dive } from '../types/Dive';
+import type { Dive,DiveDto } from '../types/Dive';
 
 const API_URL = 'https://localhost:7186/api/Dive';
 
@@ -8,7 +8,7 @@ export async function getDives(): Promise<Dive[]> {
   return response.data;
 }
 
-export async function addDive(dive: Dive): Promise<Dive> {
+export async function addDive(dive: DiveDto): Promise<Dive> {
     const response = await axios.post<Dive>(API_URL, dive);
     return response.data;
 }
