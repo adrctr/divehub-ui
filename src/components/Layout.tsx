@@ -5,6 +5,7 @@ import {
   Burger,
   Stack,
   NavLink,
+  Container,
 } from "@mantine/core";
 import { Link, Outlet } from "react-router-dom";
 
@@ -39,7 +40,9 @@ export default function Layout() {
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Outlet />
+        <Container size={"md"} >
+          <Outlet />
+        </Container>
       </AppShell.Main>
     </AppShell>
   );

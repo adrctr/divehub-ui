@@ -5,6 +5,7 @@ import { MantineProvider } from "@mantine/core";
 import Layout from "./components/Layout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DiveList from "./pages/DiveList";
+import Home from "./pages/Home";
 
 export default function App() {
   return (
@@ -12,7 +13,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<h2>Bienvenue sur DiveHub 🌊</h2>} />
+            <Route index element={<Home/>} />
             <Route path="dives" element={<DiveList />} />
           </Route>
         </Routes>
