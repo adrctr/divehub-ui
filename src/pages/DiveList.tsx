@@ -1,12 +1,4 @@
-import {
-  Table,
-  Title,
-  Loader,
-  Center,
-  Text,
-  Button,
-  Flex,
-} from "@mantine/core";
+import { Title, Loader, Center, Text, Button, Flex } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { useDiveApi } from "../hooks/useDiveApi";
 import { DiveForm } from "../components/DiveForm.tsx";
@@ -16,7 +8,7 @@ import { DiveCardsList } from "../components/DiveCardsList";
  * Récupère les données depuis l'API et les affiche dans un tableau.
  */
 export default function DiveList() {
-  const { dives, loading, error , addNewDive} = useDiveApi();
+  const { dives, loading, error, addNewDive, removeDive } = useDiveApi();
   const [opened, { open, close }] = useDisclosure(false);
 
   if (loading) {
@@ -32,21 +24,31 @@ export default function DiveList() {
   }
 
   if (!dives || dives.length === 0) {
-    return <Text>Aucune plongée enregistrée pour le moment.</Text>;
+    return (
+      <>
+        <Text>Aucune plongée enregistrée pour le moment.</Text>
+        <Button onClick={open} variant="filled">
+          Ajouter une plongée
+        </Button>
+        <DiveForm opened={opened} addNewDive={addNewDive} close={close} />
+
+
+      </>
+    );
   }
 
   return (
-    <Flex direction={"column"} gap={"lg"} justify={"center"}>
-      <Title order={2} mb="md">
-        Liste des plongées
-      </Title>
-      <DiveCardsList dives={dives} />
-      <Button onClick={open} variant="filled">Ajouter une plongée</Button>
-      <DiveForm
-        opened={opened}
-        addNewDive={addNewDive}
-        close={close} 
-      />
-    </Flex>
+    <>
+      <Flex direction={"column"} gap={"lg"} justify={"center"}>
+        <Title order={2} mb="md">
+          Liste des plongées
+        </Title>
+      <Button onClick={open} variant="filled">
+        Ajouter une plongée
+      </Button>
+        <DiveCardsList dives={dives} deleteDive={removeDive} />
+        <DiveForm opened={opened} addNewDive={addNewDive} close={close} />
+      </Flex>
+    </>
   );
 }

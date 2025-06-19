@@ -20,9 +20,10 @@ export function useDiveApi() {
   };
 
   const addNewDive = async (dive: DiveDto) => {
-    await addDive(dive);
-    await fetchDives();
+    const newDive = await addDive(dive);
+    setDives((prev) => [...prev, newDive]);
   };
+      
 
 // const updateExistingDive = async (dive: Dive) => {
 //     if (!dive.diveId) return;
