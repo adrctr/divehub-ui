@@ -4,6 +4,7 @@ export interface Dive {
   description: string;
   diveName: string;
   depth: number;
+  duration: number; // Duration in minutes
 }
 
 export interface DiveDto {
@@ -11,4 +12,5 @@ export interface DiveDto {
   description: string;
   diveName: string;
   depth: number;
+  duration: number; // Duration in minutes
 }

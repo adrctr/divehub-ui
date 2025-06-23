@@ -19,6 +19,7 @@ export function DiveForm(props: DiveFormProps) {
       diveName: "",
       depth: 0,
       description: "",
+      duration: 0,
     },
   });
 
@@ -71,8 +72,18 @@ export function DiveForm(props: DiveFormProps) {
           required
         />
 
+        <NumberInput
+          label="Durée (minutes)"
+          min={1}
+          max={240}
+          placeholder="Ex: 45"
+          mt="md"
+          {...form.getInputProps("duration")}
+          error={form.errors.duration}
+          required/>
+
         <Textarea
-          label="description"
+          label="Description"
           placeholder="Conditions, visibilité, impressions..."
           mt="md"
           {...form.getInputProps("description")}

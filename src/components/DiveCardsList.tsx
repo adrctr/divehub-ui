@@ -31,6 +31,7 @@ export function DiveCardsList({ dives, deleteDive }: DiveCardsListProps) {
             </Text>
             <Group>
               <Text size="sm">Profondeur : {dive.depth} m</Text>
+              <Text size="sm">Durée : {dive.duration} min</Text>
             </Group>
             <Group justify="flex-end" mb="xs">
               <ActionIcon
