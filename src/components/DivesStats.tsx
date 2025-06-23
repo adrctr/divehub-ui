@@ -25,7 +25,7 @@ export function DivesStats() {
               ? (
                 dives.reduce((sum, dive) => sum + (dive.duration ?? 0), 0) /
                 dives.length
-              )
+              ).toFixed(0)
               : "N/A"}{" "}
             min
             </Text>
