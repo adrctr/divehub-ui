@@ -102,6 +102,15 @@ export function DiveForm(props: DiveFormProps) {
       <Button type="submit" mt="xl">
         Enregistrer
       </Button>
+      <Button
+        variant="default"
+        mt="xl"
+        ml="md"
+        onClick={() => navigate("/dives")}
+        type="button"
+      >
+        Annuler
+      </Button>
     </form>
   );
 }

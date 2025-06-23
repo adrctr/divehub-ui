@@ -10,7 +10,12 @@ import {
 import { Link, Outlet } from "react-router-dom";
 
 export default function Layout() {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
+
+  const handleNavClick = () => {
+    // Ferme le menu uniquement si on est en mobile (width < sm)
+    close();
+  };
 
   return (
     <AppShell
@@ -30,12 +35,14 @@ export default function Layout() {
             to="/"
             label="Accueil"
             active={location.pathname === "/"}
+            onClick={handleNavClick}
           />
           <NavLink
             component={Link}
             to="/dives"
             label="Plongées"
             active={location.pathname.startsWith("/dives")}
+            onClick={handleNavClick}
           />
         </Stack>
       </AppShell.Navbar>
