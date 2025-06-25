@@ -1,12 +1,19 @@
 import "dayjs/locale/fr";
 import { useForm } from "@mantine/form";
-import { TextInput, NumberInput, Button, Textarea } from "@mantine/core";
+import {
+  TextInput,
+  NumberInput,
+  Button,
+  Textarea,
+  TagsInput,
+} from "@mantine/core";
 import { DatesProvider, DatePickerInput } from "@mantine/dates";
 import type { DiveDto } from "../types/Dive";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-
+import { useState } from "react";
 import { useDiveApi } from "../hooks/useDiveApi";
+import { useEquipmentApi } from "../hooks/useEquipmentApi";
 
 interface DiveFormProps {
   submitDive: (dive: DiveDto) => void;
@@ -21,11 +28,14 @@ export function DiveForm(props: DiveFormProps) {
       depth: 0,
       description: "",
       duration: 0,
-      
+      equipments: [],
     },
   });
 
   const { dives } = useDiveApi();
+  const { equipments } = useEquipmentApi();
+
+  const [selectedEquipments, setSelectedEquipments] = useState<string[]>([]);
 
   useEffect(() => {
     if (props.diveId) {
@@ -79,6 +89,15 @@ export function DiveForm(props: DiveFormProps) {
         {...form.getInputProps("depth")}
         error={form.errors.depth}
         required
+      />
+
+      <TagsInput
+        label="Équipement utilisé"
+        placeholder="Sélectionnez ou ajoutez de l'équipement"
+        data={equipments.map((eq) => eq.equipmentName)}
+        value={selectedEquipments}
+        onChange={setSelectedEquipments}
+        mt="md"
       />
 
       <NumberInput
