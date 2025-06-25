@@ -21,6 +21,7 @@ export function DiveForm(props: DiveFormProps) {
       depth: 0,
       description: "",
       duration: 0,
+      
     },
   });
 
@@ -45,7 +46,7 @@ export function DiveForm(props: DiveFormProps) {
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    await props.submitDive(form.values);
+    props.submitDive(form.values);
     form.reset();
     navigate("/dives");
   };

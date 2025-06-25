@@ -1,10 +1,13 @@
+import type { Equipment, EquipmentDto } from "./Equipment";
+
 export interface Dive {
   diveId: number;
   diveDate: Date;
   description: string;
   diveName: string;
   depth: number;
-  duration: number; // Duration in minutes
+  duration: number; 
+  equipments: Equipment[]; 
 }
 
 export interface DiveDto {
@@ -12,5 +15,6 @@ export interface DiveDto {
   description: string;
   diveName: string;
   depth: number;
-  duration: number; // Duration in minutes
+  duration: number;
+  equipments: EquipmentDto[]; 
 }

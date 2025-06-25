@@ -1,4 +1,4 @@
-import { Card, Text, Group, Badge, ActionIcon, Button } from "@mantine/core";
+import { Card, Text, Group, Badge, ActionIcon } from "@mantine/core";
 import type { Dive } from "../types/Dive";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
@@ -22,6 +22,20 @@ export function DiveCard({ dive, deleteDive }: DiveCardsListProps) {
       <Group>
         <Text size="sm">Profondeur : {dive.depth} m</Text>
         <Text size="sm">Durée : {dive.duration} min</Text>
+      </Group>
+      <Group justify="space-flex end" mb="xs">
+        <Text size="sm">Équipement :</Text>
+        {Array.isArray(dive.equipments) && dive.equipments.length > 0 ? (
+          dive.equipments.map((eq) => (
+            <Badge key={eq.equipmentId} color="green" variant="light">
+              {eq.equipmentName}
+            </Badge>
+          ))
+        ) : (
+          <Badge color="gray" variant="light">
+            Aucun équipement
+          </Badge>
+        )}
       </Group>
       <Group justify="space-flex end" mb="xs">
         <ActionIcon

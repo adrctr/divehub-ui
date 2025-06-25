@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Dive,DiveDto } from '../types/Dive';
 
-const API_URL = 'https://localhost:7186/api/Dive';
+const API_URL = 'https://localhost:7186/api/Dive'; //TODO: Add rthe ENDPOIN URL TO .ENV
 
 export async function getDives(): Promise<Dive[]> {
   const response = await axios.get<Dive[]>(API_URL+ '/All');
