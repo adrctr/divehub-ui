@@ -50,7 +50,7 @@ export function DiveForm(props: DiveFormProps) {
         });
       }
     }
-  }, [props.diveId, dives, form]);
+  }, [props.diveId, dives]);
 
   const navigate = useNavigate();
 
