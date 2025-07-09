@@ -5,7 +5,7 @@ import {
   NumberInput,
   Button,
   Textarea,
-  TagsInput,
+  MultiSelect,
 } from "@mantine/core";
 import { DatesProvider, DatePickerInput } from "@mantine/dates";
 import type { DiveDto } from "../types/Dive";
@@ -50,16 +50,31 @@ export function DiveForm(props: DiveFormProps) {
         });
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [props.diveId, dives]);
+  }, [props.diveId, dives, form]);
 
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    props.submitDive(form.values);
+    // Map selected equipment names to EquipmentDto objects
+    const selectedEquipmentDtos =
+      equipments.filter((eq) => selectedEquipments.includes(eq.equipmentName));
+      
+    const values = { ...form.values, equipments: selectedEquipmentDtos };
+    props.submitDive(values);
     form.reset();
+    setSelectedEquipments([]);
     navigate("/dives");
   };
+
+  // Sync selectedEquipments with form when editing an existing dive
+  useEffect(() => {
+    if (props.diveId) {
+      const dive = dives.find((d) => d.diveId === props.diveId);
+      if (dive && dive.equipments) {
+        setSelectedEquipments(dive.equipments.map((eq) => eq.equipmentName));
+      }
+    }
+  }, [props.diveId, dives]);
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -91,11 +106,12 @@ export function DiveForm(props: DiveFormProps) {
         required
       />
 
-      <TagsInput
+      <MultiSelect
         label="Équipement utilisé"
         placeholder="Sélectionnez ou ajoutez de l'équipement"
         data={equipments.map((eq) => eq.equipmentName)}
         value={selectedEquipments}
+        clearable
         onChange={setSelectedEquipments}
         mt="md"
       />
