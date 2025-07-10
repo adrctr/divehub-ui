@@ -4,6 +4,5 @@ export interface Equipment {
 }
 
 export interface EquipmentDto {
-  equipmentId: number;
   equipmentName: string;
 }

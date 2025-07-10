@@ -1,14 +1,14 @@
 import {  useNavigate } from "react-router-dom";
 import { DiveForm } from "../components/DiveForm";
-import { addDive } from "../services/diveApi";
 import type { DiveDto } from "../types/Dive";
+import { useDiveApi } from "../hooks/useDiveApi";
 
 export default function NewDive() {
-  const navigate = useNavigate();
- 
+    const navigate = useNavigate();
+  const { addNewDive } = useDiveApi();
   
   const handleUpdate = async (diveDto: DiveDto) => {
-    await addDive(diveDto);
+    await addNewDive(diveDto);
     navigate("/dives");
   };
 

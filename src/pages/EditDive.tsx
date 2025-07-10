@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { DiveForm } from "../components/DiveForm";
 
 import { useDiveApi } from "../hooks/useDiveApi";
-import type { Dive, DiveDto } from "../types/Dive";
+import type { Dive } from "../types/Dive";
 
 export default function EditDive() {
   const { id } = useParams();
@@ -16,7 +16,7 @@ export default function EditDive() {
     setDive(found ?? null);
   }, [id,dives]);
 
-  const handleUpdate = async (diveDto: DiveDto) => {
+  const handleUpdate = async (diveDto: Dive) => {
     if (!dive) return;
     await updateExistingDive({ ...dive, ...diveDto });
     navigate("/dives");
