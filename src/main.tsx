@@ -1,11 +1,24 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import '@mantine/dates/styles.css';
-import App from './App.tsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
+import { MantineProvider } from "@mantine/core";
+import { Auth0Provider } from "@auth0/auth0-react";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+const domain = "dev-dxwbqxcepg0d5pa0.ca.auth0.com";
+const clientId = "RHKCuD37TQrsFcXl9DJDICyUY8LAtRgy";
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <React.StrictMode>
+    <MantineProvider defaultColorScheme="dark">
+      <Auth0Provider
+        domain={domain}
+        clientId={clientId}
+        authorizationParams={{
+          redirect_uri: window.location.origin,
+        }}
+      >
+        <App />
+      </Auth0Provider>
+    </MantineProvider>
+  </React.StrictMode>
+);
