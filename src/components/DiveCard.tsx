@@ -1,7 +1,8 @@
-import { Card, Text, Group, Badge, ActionIcon } from "@mantine/core";
+import { Card, Text, Group, Badge, ActionIcon, Tooltip, Stack, Divider } from "@mantine/core";
 import type { Dive } from "../types/Dive";
 import { IconEdit, IconTrash } from "@tabler/icons-react";
 import { Link } from "react-router-dom";
+
 interface DiveCardsListProps {
   dive: Dive;
   deleteDive: (diveId: number) => Promise<void>;
@@ -9,53 +10,71 @@ interface DiveCardsListProps {
 
 export function DiveCard({ dive, deleteDive }: DiveCardsListProps) {
   return (
-    <Card key={dive.diveId} shadow="sm" padding="md" radius="md" withBorder>
-      <Group mb="xs">
-        <Text>{dive.diveName}</Text>
-        <Badge color="blue" variant="light">
-          {new Date(dive.diveDate).toLocaleDateString()}
-        </Badge>
-      </Group>
-      <Text size="sm" mb="xs">
-        {dive.description}
-      </Text>
-      <Group>
-        <Text size="sm">Profondeur : {dive.depth} m</Text>
-        <Text size="sm">Durée : {dive.duration} min</Text>
-      </Group>
-      <Group justify="space-flex end" mb="xs">
-        <Text size="sm">Équipement :</Text>
-        {Array.isArray(dive.equipments) && dive.equipments.length > 0 ? (
-          dive.equipments.map((eq) => (
-            <Badge key={eq.equipmentId} color="green" variant="light">
-              {eq.equipmentName}
-            </Badge>
-          ))
-        ) : (
-          <Badge color="gray" variant="light">
-            Aucun équipement
+    <Card shadow="md" padding="lg" radius="md" withBorder>
+      <Stack gap="xs">
+        <Group justify="space-between">
+          <Text fw={600} size="lg">
+            {dive.diveName}
+          </Text>
+          <Badge color="blue" variant="light">
+            {new Date(dive.diveDate).toLocaleDateString()}
           </Badge>
-        )}
-      </Group>
-      <Group justify="space-flex end" mb="xs">
-        <ActionIcon
-          onClick={() => deleteDive(dive.diveId)}
-          size="md"
-          color="red"
-          aria-label="Danger variant"
-        >
-          <IconTrash />
-        </ActionIcon>
-        <ActionIcon
-          component={Link}
-          to={`/dives/${dive.diveId}/edit`}
-          size="md"
-          color="blue"
-          aria-label="Edit dive"
-        >
-          <IconEdit />
-        </ActionIcon>
-      </Group>
+        </Group>
+        <Text size="sm" color="dimmed" mb="xs">
+          {dive.description || (
+            <span style={{ color: "#888" }}>Aucune description</span>
+          )}
+        </Text>
+        <Divider />
+        <Group gap="md">
+          <Text size="sm">
+            Profondeur : <b>{dive.depth} m</b>
+          </Text>
+          <Text size="sm">
+            Durée : <b>{dive.duration} min</b>
+          </Text>
+        </Group>
+        <Group gap="xs" wrap="wrap">
+          <Text size="sm">Équipement :</Text>
+          {Array.isArray(dive.equipments) && dive.equipments.length > 0 ? (
+            dive.equipments.map((eq) => (
+              <Badge key={eq.equipmentId} color="green" variant="light">
+                {eq.equipmentName}
+              </Badge>
+            ))
+          ) : (
+            <Badge color="gray" variant="light">
+              Aucun équipement
+            </Badge>
+          )}
+        </Group>
+        <Divider />
+        <Group justify="flex-end" gap="xs">
+          <Tooltip label="Supprimer" withArrow>
+            <ActionIcon
+              onClick={() => deleteDive(dive.diveId)}
+              size="lg"
+              color="red"
+              variant="light"
+              aria-label="Supprimer la plongée"
+            >
+              <IconTrash size={20} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Modifier" withArrow>
+            <ActionIcon
+              component={Link}
+              to={`/dives/${dive.diveId}/edit`}
+              size="lg"
+              color="blue"
+              variant="light"
+              aria-label="Modifier la plongée"
+            >
+              <IconEdit size={20} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
+      </Stack>
     </Card>
   );
 }

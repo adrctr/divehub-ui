@@ -6,10 +6,14 @@ import {
   Button,
   Flex,
   SimpleGrid,
+  Group,
+  Tooltip,
+  ActionIcon,
 } from "@mantine/core";
 import { useDiveApi } from "../hooks/useDiveApi";
 import { DiveCard } from "../components/DiveCard";
 import { useNavigate } from "react-router-dom";
+import { IconPlus } from "@tabler/icons-react";
 
 /**
  * Composant pour afficher la liste des plongées.
@@ -32,13 +36,21 @@ export default function DiveList() {
   }
 
   return (
-    <Flex direction={"column"} gap={"lg"} justify={"center"}>
-      <Title order={2} mb="md">
-        Liste des plongées
-      </Title>
-      <Button onClick={() => navigate("/dives/new")} variant="filled">
-        Ajouter une plongée
-      </Button>
+    <Flex direction="column" gap="lg" justify="center">
+      <Group justify="space-between" mb="md">
+        <Title order={2}>Liste des plongées</Title>
+        <Tooltip label="Ajouter une plongée" withArrow>
+          <ActionIcon
+            color="blue"
+            size="xl"
+            variant="filled"
+            onClick={() => navigate("/dives/new")}
+            aria-label="Ajouter une plongée"
+          >
+            <IconPlus size={28} />
+          </ActionIcon>
+        </Tooltip>
+      </Group>
 
       {!dives || dives.length === 0 ? (
         <Text>Aucune plongée enregistrée pour le moment.</Text>
