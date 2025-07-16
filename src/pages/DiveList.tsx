@@ -3,7 +3,6 @@ import {
   Loader,
   Center,
   Text,
-  Button,
   Flex,
   SimpleGrid,
   Group,
