@@ -11,17 +11,24 @@ import {
 } from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, Outlet } from "react-router-dom";
+import { AuthPanel } from "./AuthPanel";
 
 export default function Layout() {
   const [opened, { toggle, close }] = useDisclosure();
-    const { logout, user} = useAuth0();
+  const { logout, user, isAuthenticated } = useAuth0();
 
   const handleNavClick = () => {
     // Ferme le menu uniquement si on est en mobile (width < sm)
     close();
   };
 
+    // Affiche le panneau d'authentification si non connecté
+  if (!isAuthenticated) {
+    return <AuthPanel />;
+  }
+
   return (
+
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
@@ -31,7 +38,7 @@ export default function Layout() {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <span style={{ fontWeight: 600, fontSize: 20 }}>DiveHub</span>
-           <Group>
+          <Group>
             <Title order={5} fw={400} style={{ marginRight: 16 }}>
               Bienvenue, {user?.name}
             </Title>
@@ -66,7 +73,7 @@ export default function Layout() {
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Container size={"md"} >
+        <Container size={"md"}>
           <Outlet />
         </Container>
       </AppShell.Main>

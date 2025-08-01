@@ -4,8 +4,8 @@ import App from "./App";
 import { MantineProvider } from "@mantine/core";
 import { Auth0Provider } from "@auth0/auth0-react";
 
-const domain = "dev-dxwbqxcepg0d5pa0.ca.auth0.com";
-const clientId = "RHKCuD37TQrsFcXl9DJDICyUY8LAtRgy";
+const domain = "divehub.ca.auth0.com";
+const clientId = "W8j7grsuEoxvA2MMsgY4vT3reLXA6bhU";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

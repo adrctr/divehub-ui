@@ -1,9 +1,20 @@
-import { Button, Container, Title, Stack, Paper, Text, Group, ThemeIcon } from "@mantine/core";
+import {
+  Button,
+  Container,
+  Title,
+  Stack,
+  Paper,
+  Text,
+  Group,
+  ThemeIcon,
+} from "@mantine/core";
 import { IconLogin, IconUserPlus } from "@tabler/icons-react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 export function AuthPanel() {
   const { loginWithRedirect } = useAuth0();
+  const navigate = useNavigate();
 
   return (
     <Container size="xs" py="xl">
@@ -16,20 +27,25 @@ export function AuthPanel() {
             Bienvenue sur DiveHub
           </Title>
           <Text ta="center">
-            Connectez-vous ou créez un compte pour accéder à vos plongées et statistiques.
+            Connectez-vous ou créez un compte pour accéder à vos plongées et
+            statistiques.
           </Text>
+
           <Group grow>
             <Button
               leftSection={<IconLogin size={18} />}
-              onClick={() => loginWithRedirect()}
+              onClick={() =>
+                loginWithRedirect()
+              }
               size="md"
+              
             >
               Se connecter
             </Button>
             <Button
               leftSection={<IconUserPlus size={18} />}
               variant="outline"
-              onClick={() => loginWithRedirect({ screen_hint: "signup" })}
+              onClick={() => navigate("/signup")}
               size="md"
             >
               S'enregistrer
