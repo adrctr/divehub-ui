@@ -21,7 +21,7 @@ export function SignupPanel() {
           <Button
             leftSection={<IconUserPlus size={18} />}
             size="md"
-            onClick={() => loginWithRedirect({ screen_hint: "signup" })}
+            onClick={() => loginWithRedirect()}
           >
             S’enregistrer
           </Button>
