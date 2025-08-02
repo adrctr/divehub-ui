@@ -21,7 +21,7 @@ export function useDiveApi() {
 
   const addNewDive = async (dive: DiveDto) => {
     await addDive(dive);
-    fetchDives();
+    await fetchDives();
   };
   
   const updateExistingDive = async (dive: Dive) => {
@@ -29,7 +29,7 @@ export function useDiveApi() {
     try {
       // Assuming updateDive is imported from services/diveApi
       await updateDive(dive);
-      fetchDives();
+      await fetchDives();
     } catch {
       setError('Erreur lors de la mise à jour de la plongée');
     }
@@ -37,7 +37,7 @@ export function useDiveApi() {
 
   const removeDive = async (id: number) => {
     await deleteDive(id);
-    setDives((prev) => prev.filter((d) => d.diveId !== id));
+    await fetchDives();
   };
 
   useEffect(() => {

@@ -8,6 +8,7 @@ import {
   Container,
   Title,
   Button,
+  Avatar,
 } from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, Outlet } from "react-router-dom";
@@ -22,13 +23,12 @@ export default function Layout() {
     close();
   };
 
-    // Affiche le panneau d'authentification si non connecté
+  // Affiche le panneau d'authentification si non connecté
   if (!isAuthenticated) {
     return <AuthPanel />;
   }
 
   return (
-
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
@@ -38,8 +38,18 @@ export default function Layout() {
         <Group h="100%" px="md">
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
           <span style={{ fontWeight: 600, fontSize: 20 }}>DiveHub</span>
-          <Group>
-            <Title order={5} fw={400} style={{ marginRight: 16 }}>
+          <Group gap="xs" align="center">
+            <Avatar
+              src={user?.picture}
+              alt={user?.name ?? ""}
+              radius="xl"
+              size="md"
+            />
+            <Title
+              order={5}
+              fw={400}
+              style={{ marginLeft: 8, marginRight: 16 }}
+            >
               Bienvenue, {user?.name}
             </Title>
             <Button
