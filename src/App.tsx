@@ -12,6 +12,7 @@ import NewDive from "./pages/NewDive";
 import { useAuth0 } from "@auth0/auth0-react";
 import { AuthPanel } from "./components/AuthPanel";
 import { SignupPanel } from "./components/SignupPanel";
+import { AuthProvider } from "./components/AuthProvider";
 
 export default function App() {
   const { isLoading, isAuthenticated } = useAuth0();
@@ -23,27 +24,30 @@ export default function App() {
       </Center>
     );
   }
+  console.log("App rendered, isAuthenticated:", isAuthenticated);
 
   // Si connecté, affiche le header de bienvenue + bouton logout, puis le routeur
   return (
-    <BrowserRouter>
-      <Routes>
-        {isAuthenticated ? (
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="signin" element={<AuthPanel />} />
-            <Route path="signup" element={<SignupPanel />} />
-            <Route path="dives" element={<DiveList />} />
-            <Route path="dives/:id/edit" element={<EditDive />} />
-            <Route path="dives/new" element={<NewDive />} />
-          </Route>
-        ) : (
-          <>
-            <Route path="/" element={<AuthPanel />} />
-            <Route path="signup" element={<SignupPanel />} />
-          </>
-        )}
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
+          {isAuthenticated ? (
+            <Route path="/" element={<Layout />}>
+              <Route index element={<Home />} />
+              <Route path="signin" element={<AuthPanel />} />
+              <Route path="signup" element={<SignupPanel />} />
+              <Route path="dives" element={<DiveList />} />
+              <Route path="dives/:id/edit" element={<EditDive />} />
+              <Route path="dives/new" element={<NewDive />} />
+            </Route>
+          ) : (
+            <>
+              <Route path="/" element={<AuthPanel />} />
+              <Route path="signup" element={<SignupPanel />} />
+            </>
+          )}
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
