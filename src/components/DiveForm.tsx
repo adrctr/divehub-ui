@@ -20,12 +20,14 @@ import { useDisclosure } from "@mantine/hooks";
 interface DiveFormProps {
   submitDive: (dive: Dive) => void;
   diveId?: number;
+  isSubmitting?: boolean;
 }
 
 export function DiveForm(props: DiveFormProps) {
   const form = useForm<Dive>({
     initialValues: {
       diveId: props.diveId || 0,
+      userId: 0, // Sera défini automatiquement côté API
       diveDate: new Date(),
       diveName: "",
       depth: 0,
@@ -55,21 +57,30 @@ export function DiveForm(props: DiveFormProps) {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [props.diveId, dives]);
 
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
-    // Map selected equipment names to EquipmentDto objects
-    const selectedEquipmentDtos = equipments.filter((eq) =>
-      selectedEquipments.includes(eq.equipmentName)
-    );
+    try {
+      // Map selected equipment names to EquipmentDto objects
+      const selectedEquipmentDtos = equipments.filter((eq) =>
+        selectedEquipments.includes(eq.equipmentName)
+      );
 
-    const values = { ...form.values, equipments: selectedEquipmentDtos };
-    props.submitDive(values);
-    form.reset();
-    setSelectedEquipments([]);
-    navigate("/dives");
+      const values = { ...form.values, equipments: selectedEquipmentDtos };
+      await props.submitDive(values);
+      
+      // Réinitialiser le formulaire seulement si l'ajout a réussi
+      form.reset();
+      setSelectedEquipments([]);
+      
+      // Ne pas naviguer automatiquement - laisser le composant parent gérer ça
+    } catch (error) {
+      console.error('Erreur lors de la soumission du formulaire:', error);
+      // L'erreur sera gérée par le composant parent
+    }
   };
 
   // Sync selectedEquipments with form when editing an existing dive
@@ -173,7 +184,7 @@ export function DiveForm(props: DiveFormProps) {
           error={form.errors.description}
         />
 
-        <Button type="submit" mt="xl">
+        <Button type="submit" mt="xl" loading={props.isSubmitting} disabled={props.isSubmitting}>
           Enregistrer
         </Button>
         <Button

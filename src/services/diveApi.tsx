@@ -3,12 +3,18 @@ import type { Dive,DiveDto } from '../types/Dive';
 
 const API_URL = 'https://localhost:7186/api/Dive'; //TODO: Add rthe ENDPOIN URL TO .ENV
 
-// Variable pour stocker le token
+// Variable pour stocker le token et l'userId
 let authToken: string | null = null;
+let currentUserId: number | null = null;
 
 // Fonction pour définir le token
 export function setAuthToken(token: string | null) {
   authToken = token;
+}
+
+// Fonction pour définir l'userId actuel
+export function setCurrentUserId(userId: number | null) {
+  currentUserId = userId;
 }
 
 // Fonction helper pour créer les headers avec le token
@@ -32,7 +38,20 @@ export async function getDives(): Promise<Dive[]> {
 }
 
 export async function addDive(dive: DiveDto): Promise<Dive> {
-    const response = await axios.post<Dive>(API_URL, dive, {
+    // Vérifier que l'userId est disponible
+    if (!dive.userId && !currentUserId) {
+        throw new Error('UserId non disponible. Veuillez vous reconnecter.');
+    }
+
+    // Ajouter automatiquement l'userId si il n'est pas déjà défini
+    const diveWithUserId = {
+      ...dive,
+      userId: dive.userId ?? currentUserId
+    };
+
+    console.log('Ajout de plongée avec userId:', diveWithUserId.userId);
+
+    const response = await axios.post<Dive>(API_URL, diveWithUserId, {
       headers: getAuthHeaders()
     });
     return response.data;

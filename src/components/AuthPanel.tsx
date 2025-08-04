@@ -9,9 +9,20 @@ import {
 } from "@mantine/core";
 import { IconLogin, IconUserPlus } from "@tabler/icons-react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { setSignupFlag } from "../utils/signupUtils";
 
 export function AuthPanel() {
   const { loginWithRedirect } = useAuth0();
+
+  const handleSignup = () => {
+    // Marquer que c'est un processus de signup
+    setSignupFlag();
+    loginWithRedirect({ 
+      authorizationParams: { 
+        screen_hint: 'signup' 
+      } 
+    });
+  };
 
   return (
     <Container size="xs" px="md" py="xl" style={{ minHeight: "100vh", display: "flex", alignItems: "center" }}>
@@ -56,7 +67,7 @@ export function AuthPanel() {
               fullWidth
               leftSection={<IconUserPlus size={18} />}
               variant="outline"
-              onClick={() => loginWithRedirect({ authorizationParams: { screen_hint: 'signup' } })}
+              onClick={handleSignup}
               size="lg"
               style={{ height: "48px" }}
             >

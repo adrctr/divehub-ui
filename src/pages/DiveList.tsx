@@ -12,14 +12,14 @@ import {
 import { useDiveApi } from "../hooks/useDiveApi";
 import { DiveCard } from "../components/DiveCard";
 import { useNavigate } from "react-router-dom";
-import { IconPlus } from "@tabler/icons-react";
+import { IconPlus, IconRefresh } from "@tabler/icons-react";
 
 /**
  * Composant pour afficher la liste des plongées.
  * Récupère les données depuis l'API et les affiche dans un tableau.
  */
 export default function DiveList() {
-  const { dives, loading, error, removeDive } = useDiveApi();
+  const { dives, loading, error, removeDive, refreshDives } = useDiveApi();
   const navigate = useNavigate();
 
   if (loading) {
@@ -38,17 +38,30 @@ export default function DiveList() {
     <Flex direction="column" gap="lg" justify="center">
       <Group justify="space-between" mb="md">
         <Title order={2}>Liste des plongées</Title>
-        <Tooltip label="Ajouter une plongée" withArrow>
-          <ActionIcon
-            color="blue"
-            size="xl"
-            variant="filled"
-            onClick={() => navigate("/dives/new")}
-            aria-label="Ajouter une plongée"
-          >
-            <IconPlus size={28} />
-          </ActionIcon>
-        </Tooltip>
+        <Group>
+          <Tooltip label="Actualiser la liste" withArrow>
+            <ActionIcon
+              color="gray"
+              size="lg"
+              variant="subtle"
+              onClick={refreshDives}
+              aria-label="Actualiser la liste"
+            >
+              <IconRefresh size={20} />
+            </ActionIcon>
+          </Tooltip>
+          <Tooltip label="Ajouter une plongée" withArrow>
+            <ActionIcon
+              color="blue"
+              size="xl"
+              variant="filled"
+              onClick={() => navigate("/dives/new")}
+              aria-label="Ajouter une plongée"
+            >
+              <IconPlus size={28} />
+            </ActionIcon>
+          </Tooltip>
+        </Group>
       </Group>
 
       {!dives || dives.length === 0 ? (

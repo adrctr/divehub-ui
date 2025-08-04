@@ -2,7 +2,9 @@
 // All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
 import '@mantine/dates/styles.css';
+import '@mantine/notifications/styles.css';
 import { Loader, Center } from "@mantine/core";
+import { Notifications } from '@mantine/notifications';
 import Layout from "./components/Layout";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import DiveList from "./pages/DiveList";
@@ -28,26 +30,29 @@ export default function App() {
 
   // Si connecté, affiche le header de bienvenue + bouton logout, puis le routeur
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          {isAuthenticated ? (
-            <Route path="/" element={<Layout />}>
-              <Route index element={<Home />} />
-              <Route path="signin" element={<AuthPanel />} />
-              <Route path="signup" element={<SignupPanel />} />
-              <Route path="dives" element={<DiveList />} />
-              <Route path="dives/:id/edit" element={<EditDive />} />
-              <Route path="dives/new" element={<NewDive />} />
-            </Route>
-          ) : (
-            <>
-              <Route path="/" element={<AuthPanel />} />
-              <Route path="signup" element={<SignupPanel />} />
-            </>
-          )}
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <>
+      <Notifications />
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {isAuthenticated ? (
+              <Route path="/" element={<Layout />}>
+                <Route index element={<Home />} />
+                <Route path="signin" element={<AuthPanel />} />
+                <Route path="signup" element={<SignupPanel />} />
+                <Route path="dives" element={<DiveList />} />
+                <Route path="dives/:id/edit" element={<EditDive />} />
+                <Route path="dives/new" element={<NewDive />} />
+              </Route>
+            ) : (
+              <>
+                <Route path="/" element={<AuthPanel />} />
+                <Route path="signup" element={<SignupPanel />} />
+              </>
+            )}
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </>
   );
 }

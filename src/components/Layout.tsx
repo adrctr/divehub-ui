@@ -9,6 +9,7 @@ import {
   Avatar,
   Text,
   ActionIcon,
+  Badge,
 } from "@mantine/core";
 import { useAuth0 } from "@auth0/auth0-react";
 import { Link, Outlet } from "react-router-dom";
@@ -16,10 +17,12 @@ import { AuthPanel } from "./AuthPanel";
 import { IconLogout } from "@tabler/icons-react";
 import { useEffect } from "react";
 import axios from "axios";
+import { useAuthContext } from "../contexts/AuthContext";
 
 export default function Layout() {
   const [opened, { toggle, close }] = useDisclosure();
   const { logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { userId, loading: userLoading } = useAuthContext();
 
   // Configure axios with Auth0 token for all API calls
   useEffect(() => {
@@ -59,7 +62,14 @@ export default function Layout() {
           </Group>
           <Group align="center" gap="sm">
             <Avatar src={user?.picture} alt={user?.name ?? ""} radius="xl" size="md" />
-            <Text fw={500}>{user?.name}</Text>
+            <Stack gap={2}>
+              <Text fw={500} size="sm">{user?.name}</Text>
+              {userId && !userLoading && (
+                <Badge size="xs" variant="light" color="blue">
+                  ID: {userId}
+                </Badge>
+              )}
+            </Stack>
             <ActionIcon
               color="red"
               variant="light"

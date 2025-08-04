@@ -1,9 +1,20 @@
 import { Button, Container, Title, Stack, Paper, Text, ThemeIcon } from "@mantine/core";
 import { IconUserPlus } from "@tabler/icons-react";
 import { useAuth0 } from "@auth0/auth0-react";
+import { setSignupFlag } from "../utils/signupUtils";
 
 export function SignupPanel() {
   const { loginWithRedirect } = useAuth0();
+
+  const handleSignup = () => {
+    // Marquer que c'est un processus de signup
+    setSignupFlag();
+    loginWithRedirect({
+      authorizationParams: { 
+        screen_hint: 'signup' 
+      }
+    });
+  };
 
   return (
     <Container size="xs" py="xl">
@@ -21,7 +32,7 @@ export function SignupPanel() {
           <Button
             leftSection={<IconUserPlus size={18} />}
             size="md"
-            onClick={() => loginWithRedirect()}
+            onClick={() => handleSignup()}
           >
             S’enregistrer
           </Button>
