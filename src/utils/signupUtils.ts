@@ -1,12 +1,25 @@
 // Utilitaires pour gérer le processus de signup
 export const setSignupFlag = () => {
-  localStorage.setItem('divehub_signup_in_progress', 'true');
+  try {
+    localStorage.setItem('divehub_signup_in_progress', 'true');
+  } catch (error) {
+    console.warn('Impossible de définir le flag de signup dans localStorage:', error);
+  }
 };
 
 export const clearSignupFlag = () => {
-  localStorage.removeItem('divehub_signup_in_progress');
+  try {
+    localStorage.removeItem('divehub_signup_in_progress');
+  } catch (error) {
+    console.warn('Impossible de supprimer le flag de signup du localStorage:', error);
+  }
 };
 
 export const isSignupInProgress = (): boolean => {
-  return localStorage.getItem('divehub_signup_in_progress') === 'true';
+  try {
+    return localStorage.getItem('divehub_signup_in_progress') === 'true';
+  } catch (error) {
+    console.warn('Impossible de lire le flag de signup du localStorage:', error);
+    return false; // Valeur par défaut sécurisée
+  }
 };

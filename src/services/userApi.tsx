@@ -25,25 +25,43 @@ function getAuthHeaders() {
 }
 
 // Créer un nouvel utilisateur
-export async function createUser(user: UserDto): Promise<User> {
-  const response = await axios.post<UserResponse>(API_URL, user, {
-    headers: getAuthHeaders()
-  });
-  
-  // Convertir la date string en objet Date et ajouter l'auth0UserId
-  return {
-    ...response.data,
-    auth0UserId: user.auth0UserId,
-    picture: user.picture,
-    createdAt: new Date(response.data.createdAt)
-  };
+export async function createUser(user: UserDto, retryCount = 0): Promise<User> {
+  try {
+    const response = await axios.post<UserResponse>(API_URL, user, {
+      headers: getAuthHeaders(),
+      timeout: 15000 // 15 secondes pour la création
+    });
+    
+    // Convertir la date string en objet Date et ajouter l'auth0UserId
+    return {
+      ...response.data,
+      auth0UserId: user.auth0UserId,
+      picture: user.picture,
+      createdAt: new Date(response.data.createdAt)
+    };
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { response?: { status?: number } };
+      
+      // Retry pour les erreurs serveur (5xx) ou de réseau
+      if (((axiosError.response?.status && axiosError.response.status >= 500) || !axiosError.response) && retryCount < 1) {
+        console.log(`Retry ${retryCount + 1}/2 pour createUser...`);
+        await new Promise(resolve => setTimeout(resolve, 2000 * (retryCount + 1)));
+        return createUser(user, retryCount + 1);
+      }
+    }
+    
+    console.error('Erreur lors de la création de l\'utilisateur:', error);
+    throw error;
+  }
 }
 
 // Récupérer un utilisateur par son Auth0 ID
-export async function getUserByAuth0Id(auth0UserId: string): Promise<User | null> {
+export async function getUserByAuth0Id(auth0UserId: string, retryCount = 0): Promise<User | null> {
   try {
     const response = await axios.get<UserResponse>(`${API_URL}/auth0/${encodeURIComponent(auth0UserId)}`, {
-      headers: getAuthHeaders()
+      headers: getAuthHeaders(),
+      timeout: 10000 // 10 secondes de timeout
     });
     
     return {
@@ -55,9 +73,18 @@ export async function getUserByAuth0Id(auth0UserId: string): Promise<User | null
     if (error && typeof error === 'object' && 'response' in error) {
       const axiosError = error as { response?: { status?: number } };
       if (axiosError.response?.status === 404) {
-        return null; // Utilisateur non trouvé
+        return null; // Utilisateur non trouvé - c'est normal
+      }
+      
+      // Retry pour les erreurs serveur (5xx) ou de réseau
+      if (((axiosError.response?.status && axiosError.response.status >= 500) || !axiosError.response) && retryCount < 2) {
+        console.log(`Retry ${retryCount + 1}/3 pour getUserByAuth0Id...`);
+        await new Promise(resolve => setTimeout(resolve, 1000 * (retryCount + 1)));
+        return getUserByAuth0Id(auth0UserId, retryCount + 1);
       }
     }
+    
+    console.error('Erreur lors de la récupération de l\'utilisateur par Auth0 ID:', error);
     throw error;
   }
 }

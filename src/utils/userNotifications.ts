@@ -59,3 +59,12 @@ export const showDiveErrorNotification = (error?: string) => {
     autoClose: 5000,
   });
 };
+
+export const showAuthErrorNotification = (message?: string) => {
+  notifications.show({
+    title: 'Problème de connexion',
+    message: message || 'Un problème est survenu lors de la connexion. Certaines fonctionnalités peuvent être limitées.',
+    color: 'orange',
+    autoClose: 7000,
+  });
+};

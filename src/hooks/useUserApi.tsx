@@ -32,10 +32,21 @@ export function useUserApi() {
       }
     } catch (err) {
       console.error('Erreur lors de la création/récupération de l\'utilisateur:', err);
-      const errorMessage = 'Erreur lors de la gestion de l\'utilisateur';
-      setError(errorMessage);
-      showErrorNotification(errorMessage);
-      throw err;
+      
+      // Essayer de créer l'utilisateur même si la vérification a échoué
+      try {
+        console.log('Tentative de création directe après échec de vérification...');
+        const newUser = await createOrGetUser(userDto);
+        setCurrentUser(newUser);
+        showUserCreatedNotification(combineNames(newUser.firstName, newUser.lastName));
+        return newUser;
+      } catch (creationErr) {
+        console.error('Échec de la création directe aussi:', creationErr);
+        const errorMessage = 'Impossible de créer ou récupérer l\'utilisateur';
+        setError(errorMessage);
+        showErrorNotification(errorMessage);
+        throw creationErr;
+      }
     } finally {
       setLoading(false);
     }
@@ -47,15 +58,33 @@ export function useUserApi() {
     setError(null);
     
     try {
+      console.info('INFO 1', 'Récupération de l\'utilisateur par Auth0 ID:', auth0UserId);
       const user = await getUserByAuth0Id(auth0UserId);
+      console.info('INFO 2', 'Récupération de l\'utilisateur :', user);
+
       setCurrentUser(user);
       return user;
     } catch (err) {
       console.error('Erreur lors de la récupération de l\'utilisateur:', err);
+      
+      // Ne pas afficher d'erreur si l'utilisateur n'existe simplement pas
+      if (err && typeof err === 'object' && 'response' in err) {
+        const axiosError = err as { response?: { status?: number } };
+        if (axiosError.response?.status === 404) {
+          // Utilisateur non trouvé - c'est normal pour un nouveau compte
+          console.info('Utilisateur non trouvé (404) - probablement un nouveau compte');
+          setCurrentUser(null);
+          return null;
+        }
+      }
+      
+      // Pour d'autres erreurs, on les signale mais sans notification utilisateur pour éviter la pollution
       const errorMessage = 'Erreur lors de la récupération de l\'utilisateur';
       setError(errorMessage);
-      showErrorNotification(errorMessage);
-      throw err;
+      console.warn('Erreur de récupération utilisateur, mais continuation en mode dégradé');
+      
+      // Return null au lieu de throw pour permettre la continuation
+      return null;
     } finally {
       setLoading(false);
     }
