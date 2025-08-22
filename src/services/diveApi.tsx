@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { Dive,DiveDto } from '../types/Dive';
 
-const API_URL = 'https://localhost:7186/api/Dive'; //TODO: Add rthe ENDPOIN URL TO .ENV
+const API_URL = `${import.meta.env.VITE_API_URL}/api/Dive`;
 
 // Variable pour stocker le token et l'userId
 let authToken: string | null = null;

@@ -1,8 +1,7 @@
 import axios from 'axios';
 import type { Equipment,EquipmentDto } from '../types/Equipment';
 
-const API_URL = 'https://localhost:7186/api/Equipment'; //TODO: Add rthe ENDPOIN URL TO .ENV
-
+const API_URL = `${import.meta.env.VITE_API_URL}/api/Equipment`;
 // Variable pour stocker le token et l'userId
 let authToken: string | null = null;
 let currentUserId: number | null = null;

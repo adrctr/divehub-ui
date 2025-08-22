@@ -1,7 +1,7 @@
 import axios from 'axios';
 import type { User, UserDto, UserResponse } from '../types/User';
 
-const API_URL = 'https://localhost:7186/api/User'; //TODO: Add the ENDPOINT URL TO .ENV
+const API_URL = `${import.meta.env.VITE_API_URL}/api/User`;
 
 // Variable pour stocker le token
 let authToken: string | null = null;
