@@ -7,7 +7,6 @@ import {
   Tooltip, 
   Stack, 
   Divider, 
-  Avatar,
   Transition,
   Box,
   ThemeIcon,
@@ -18,7 +17,6 @@ import type { Dive } from "../types/Dive";
 import { 
   IconEdit, 
   IconTrash, 
-  IconMapPin, 
   IconClock, 
   IconRipple,
   IconFish,
@@ -47,8 +45,8 @@ export function DiveCard({ dive, deleteDive }: DiveCardsListProps) {
   // Calculer un pourcentage pour la visualisation de la profondeur (max 40m)
   const depthPercentage = Math.min((dive.depth / 40) * 100, 100);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('fr-FR', {
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('fr-FR', {
       day: 'numeric',
       month: 'short',
       year: 'numeric'
