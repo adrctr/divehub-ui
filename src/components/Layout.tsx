@@ -6,26 +6,79 @@ import {
   Stack,
   NavLink,
   Container,
+  Avatar,
+  Text,
+  ActionIcon,
+  Badge,
 } from "@mantine/core";
+import { useAuth0 } from "@auth0/auth0-react";
 import { Link, Outlet } from "react-router-dom";
+import { AuthPanel } from "./AuthPanel";
+import { IconLogout } from "@tabler/icons-react";
+import { useEffect } from "react";
+import axios from "axios";
+import { useAuthContext } from "../contexts/AuthContext";
 
 export default function Layout() {
   const [opened, { toggle, close }] = useDisclosure();
+  const { logout, user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+  const { userId, loading: userLoading } = useAuthContext();
+
+  // Configure axios with Auth0 token for all API calls
+  useEffect(() => {
+    if (isAuthenticated) {
+      getAccessTokenSilently()
+        .then((token) => {
+          axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+        })
+        .catch((error) => console.error("Failed to get access token", error));
+    } else {
+      delete axios.defaults.headers.common["Authorization"];
+    }
+  }, [isAuthenticated, getAccessTokenSilently]);
 
   const handleNavClick = () => {
     // Ferme le menu uniquement si on est en mobile (width < sm)
     close();
   };
 
+    // Affiche le panneau d'authentification si non connecté
+  if (!isAuthenticated) {
+    return <AuthPanel />;
+  }
+
   return (
+
     <AppShell
       header={{ height: 60 }}
       navbar={{ width: 300, breakpoint: "sm", collapsed: { mobile: !opened } }}
       padding="md"
     >
       <AppShell.Header>
-        <Group h="100%" px="md">
-          <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+        <Group justify="space-between" h="100%" px="md">
+          <Group align="center" gap="md">
+            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
+            <Text fw={600} fz="lg">DiveHub</Text>
+          </Group>
+          <Group align="center" gap="sm">
+            <Avatar src={user?.picture} alt={user?.name ?? ""} radius="xl" size="md" />
+            <Stack gap={2}>
+              <Text fw={500} size="sm">{user?.name}</Text>
+              {userId && !userLoading && (
+                <Badge size="xs" variant="light" color="blue">
+                  ID: {userId}
+                </Badge>
+              )}
+            </Stack>
+            <ActionIcon
+              color="red"
+              variant="light"
+              size="lg"
+              onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}
+            >
+              <IconLogout size={20} />
+            </ActionIcon>
+          </Group>
         </Group>
       </AppShell.Header>
       <AppShell.Navbar p="md">
@@ -47,7 +100,7 @@ export default function Layout() {
         </Stack>
       </AppShell.Navbar>
       <AppShell.Main>
-        <Container size={"md"} >
+        <Container size={"md"}>
           <Outlet />
         </Container>
       </AppShell.Main>
