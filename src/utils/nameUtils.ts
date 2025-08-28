@@ -39,9 +39,9 @@ export function splitFullName(fullName: string): NameParts {
  * @param lastName Le nom de famille
  * @returns Le nom complet
  */
-export function combineNames(firstName: string, lastName: string): string {
-  const first = firstName.trim();
-  const last = lastName.trim();
+export function combineNames(firstName?: string, lastName?: string): string {
+  const first = typeof firstName === "string" ? firstName.trim() : "";
+  const last = typeof lastName === "string" ? lastName.trim() : "";
   
   if (!first && !last) return '';
   if (!first) return last;
@@ -56,9 +56,9 @@ export function combineNames(firstName: string, lastName: string): string {
  * @param lastName Le nom de famille
  * @returns Les initiales (ex: "JD" pour "Jean Dupont")
  */
-export function getInitials(firstName: string, lastName: string): string {
-  const first = firstName.trim();
-  const last = lastName.trim();
+export function getInitials(firstName?: string, lastName?: string): string {
+  const first = typeof firstName === "string" ? firstName.trim() : "";
+  const last = typeof lastName === "string" ? lastName.trim() : "";
   
   let initials = '';
   if (first) initials += first.charAt(0).toUpperCase();

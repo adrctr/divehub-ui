@@ -13,7 +13,6 @@ export function useUserApi() {
   const ensureUserExists = useCallback(async (userDto: UserDto): Promise<User> => {
     setLoading(true);
     setError(null);
-    
     try {
       // Vérifier d'abord si l'utilisateur existe déjà
       const existingUser = await getUserByAuth0Id(userDto.auth0UserId);

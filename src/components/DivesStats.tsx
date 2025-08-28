@@ -24,15 +24,16 @@ export function DivesStats() {
   const { dives, loading } = useDiveApi();
 
   // Calculs des statistiques avec gestion des cas d'erreur
-  const totalDives = dives?.length || 0;
-  const maxDepth = totalDives > 0 ? Math.max(...dives.map((dive) => dive.depth)) : 0;
+  const divesArray = Array.isArray(dives) ? dives : [];
+  const totalDives = divesArray.length;
+  const maxDepth = totalDives > 0 ? Math.max(...divesArray.map((dive) => dive.depth)) : 0;
   const avgDuration = totalDives > 0
-    ? Math.round(dives.reduce((sum, dive) => sum + (dive.duration ?? 0), 0) / totalDives)
+    ? Math.round(divesArray.reduce((sum, dive) => sum + (dive.duration ?? 0), 0) / totalDives)
     : 0;
   
   // Dernière plongée
   const lastDive = totalDives > 0 
-    ? dives.sort((a, b) => new Date(b.diveDate).getTime() - new Date(a.diveDate).getTime())[0]
+    ? [...divesArray].sort((a, b) => new Date(b.diveDate).getTime() - new Date(a.diveDate).getTime())[0]
     : null;
 
   const StatCard = ({ icon, title, value, unit, color, description, trend }: {
