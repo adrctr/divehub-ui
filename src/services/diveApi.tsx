@@ -46,7 +46,7 @@ export async function addDive(dive: DiveDto): Promise<Dive> {
     // Ajouter automatiquement l'userId si il n'est pas déjà défini
     const diveWithUserId = {
       ...dive,
-      userId: dive.userId ?? currentUserId
+      userId: currentUserId
     };
 
     console.log('dive:', dive);
