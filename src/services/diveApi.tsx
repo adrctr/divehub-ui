@@ -49,6 +49,11 @@ export async function addDive(dive: DiveDto): Promise<Dive> {
       userId: dive.userId ?? currentUserId
     };
 
+    console.log('dive:', dive);
+    console.log('dive.userId:', dive.userId);
+    console.log('currentUserId:', currentUserId);
+    console.log('diveWithUserId:', diveWithUserId);
+    
     console.log('Ajout de plongée avec userId:', diveWithUserId.userId);
 
     const response = await axios.post<Dive>(API_URL, diveWithUserId, {
