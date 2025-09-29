@@ -88,7 +88,7 @@ export function DiveCard({ dive, deleteDive }: DiveCardsListProps) {
                 <Group gap={4} align="center" mt={2}>
                   <IconCalendar size={14} color="#666" />
                   <Text size="sm" c="dimmed">
-                    {formatDate(dive.diveDate)}
+                    {formatDate(new Date(dive.diveDate))}
                   </Text>
                 </Group>
               </div>
