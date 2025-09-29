@@ -40,64 +40,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
               if (existingUser) {
                 // Utilisateur existant - simple connexion
                 console.log('Utilisateur existant connecté:', `${existingUser.firstName} ${existingUser.lastName}`);
-                
-                // Configurer l'userId pour toutes les APIs
                 setDiveUserId(existingUser.userId);
                 setEquipmentUserId(existingUser.userId);
                 console.log('UserId configuré pour toutes les APIs:', existingUser.userId);
-                
-                // Nettoyer le flag de signup si présent
                 clearSignupFlag();
               } else {
-                // Utilisateur n'existe pas dans la BD
-                console.log('Utilisateur non trouvé dans la base de données');
-                
-                // Vérifier si c'est un processus de signup
-                const isSignup = isSignupInProgress();
-                
-                if (isSignup) {
-                  // C'est un signup - créer l'utilisateur
-                  console.log('Processus de signup détecté - création de l\'utilisateur');
-                  
-                  try {
-                    // Séparer le nom complet en prénom et nom de famille
-                    const { firstName, lastName } = splitFullName(user.name);
-                    
-                    const newUser = await ensureUserExists({
-                      auth0UserId: user.sub,
-                      firstName,
-                      lastName,
-                      email: user.email,
-                      picture: user.picture
-                    });
-                    
-                    // Configurer l'userId pour toutes les APIs
-                    if (newUser.userId) {
-                      setDiveUserId(newUser.userId);
-                      setEquipmentUserId(newUser.userId);
-                      console.log('UserId configuré pour le nouvel utilisateur:', newUser.userId);
-                    }
-                    
-                    // Nettoyer le flag de signup
-                    clearSignupFlag();
-                  } catch (userCreationError) {
-                    console.error('Erreur lors de la création de l\'utilisateur:', userCreationError);
-                    clearSignupFlag(); // Nettoyer le flag même en cas d'erreur
-                    // Ne pas faire d'autres actions pour éviter les erreurs en cascade
-                    return;
+                // Utilisateur non trouvé en base, création automatique
+                console.log('Utilisateur non trouvé, création automatique...');
+                try {
+                  const { firstName, lastName } = splitFullName(user.name);
+                  const newUser = await ensureUserExists({
+                    auth0UserId: user.sub,
+                    firstName,
+                    lastName,
+                    email: user.email,
+                    picture: user.picture
+                  });
+                  if (newUser.userId) {
+                    setDiveUserId(newUser.userId);
+                    setEquipmentUserId(newUser.userId);
+                    console.log('UserId configuré pour le nouvel utilisateur:', newUser.userId);
                   }
-                } else {
-                  // Ce n'est pas un signup, mais l'utilisateur n'existe pas
-                  // Approche plus conservatrice : ne pas créer automatiquement l'utilisateur
-                  console.warn('Utilisateur authentifié mais non trouvé dans la BD. Connexion en mode limité.');
-                  
-                  // Informer l'utilisateur du problème
-                  showAuthErrorNotification('Votre compte n\'a pas été trouvé. Contactez le support si le problème persiste.');
-                  
-                  // Option : rediriger vers une page d'enregistrement ou afficher un message
-                  // Pour l'instant, on laisse l'utilisateur sans userId (mode dégradé)
+                  clearSignupFlag();
+                } catch (userCreationError) {
+                  console.error('Erreur lors de la création automatique de l\'utilisateur:', userCreationError);
+                  clearSignupFlag();
                   setDiveUserId(null);
                   setEquipmentUserId(null);
+                  showAuthErrorNotification('Erreur lors de la création de votre compte. Contactez le support.');
+                  return;
                 }
               }
             } catch (userFetchError) {
