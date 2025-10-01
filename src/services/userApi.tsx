@@ -27,7 +27,7 @@ function getAuthHeaders() {
 // Créer un nouvel utilisateur
 export async function createUser(user: UserDto, retryCount = 0): Promise<User> {
   try {
-    const response = await axios.post<UserResponse>(API_URL, user, {
+    const response = await axios.post<UserResponse>(`${API_URL}`, user, {
       headers: getAuthHeaders(),
       timeout: 15000 // 15 secondes pour la création
     });
@@ -91,7 +91,7 @@ export async function getUserByAuth0Id(auth0UserId: string, retryCount = 0): Pro
 
 // Récupérer un utilisateur par ID
 export async function getUserById(userId: number): Promise<User> {
-  const response = await axios.get<UserResponse>(`${API_URL}/${userId}`, {
+  const response = await axios.get<UserResponse>(`${import.meta.env.VITE_API_URL}/${userId}`, {
     headers: getAuthHeaders()
   });
   
@@ -103,7 +103,7 @@ export async function getUserById(userId: number): Promise<User> {
 
 // Mettre à jour un utilisateur
 export async function updateUser(user: User): Promise<User> {
-  const response = await axios.put<UserResponse>(`${API_URL}/${user.userId}`, user, {
+  const response = await axios.put<UserResponse>(`${import.meta.env.VITE_API_URL}/${user.userId}`, user, {
     headers: getAuthHeaders()
   });
   
