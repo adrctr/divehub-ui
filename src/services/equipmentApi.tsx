@@ -29,7 +29,7 @@ function getAuthHeaders() {
   return headers;
 }
 
-export async function getEquipments(): Promise<Equipment[]> {
+export async function getEquipmentsForUser(): Promise<Equipment[]> {
   const response = await axios.get<Equipment[]>(API_URL + '/All', {
     headers: getAuthHeaders()
   });

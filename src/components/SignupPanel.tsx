@@ -26,8 +26,8 @@ export function SignupPanel() {
           <Title order={2} ta="center">
             Créez votre compte DiveHub
           </Title>
-          <Text ta="center" color="dimmed">
-            L’inscription est rapide et gratuite. Rejoignez la communauté DiveHub pour gérer vos plongées et équipements.
+          <Text ta="center">
+            L'inscription est rapide et gratuite. Rejoignez la communauté DiveHub pour gérer vos plongées et équipements.
           </Text>
           <Button
             leftSection={<IconUserPlus size={18} />}

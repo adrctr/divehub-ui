@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Equipment, EquipmentDto } from '../types/Equipment';
-import { addEquipment, deleteEquipment, getEquipments, updateEquipment } from '../services/equipmentApi';
+import { addEquipment, deleteEquipment, getEquipmentsForUser, updateEquipment } from '../services/equipmentApi';
 
 export function useEquipmentApi() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -10,7 +10,7 @@ export function useEquipmentApi() {
   const fetchEquipments = async () => {
     setLoading(true);
     try {
-      const data = await getEquipments();
+      const data = await getEquipmentsForUser();
       setEquipments(data);
     } catch {
       setError('Erreur de chargement des équipements de plongées');
